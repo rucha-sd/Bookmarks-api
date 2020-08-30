@@ -161,6 +161,10 @@ router.patch('/addtag/:id', async (req, res)=> {
 
         const tag =  await Tag.findOne({title})
 
+        if (!tag) {
+            return res.status(400).send({ error: 'Tag not available!' })
+        }
+
         if(!bookmark.tags.includes(tag.id))
         {
             await bookmark.tags.push(tag.id)
@@ -183,15 +187,17 @@ router.patch('/removetag/:id', async (req, res)=> {
 
         const tag =  await Tag.findOne({title})
 
-        if(bookmark.tags.includes(tag.id))
-        {
-            console.log('Includes')
-            const index = bookmark.tags.indexOf(tag.id)
-            console.log(index)
-            if (index > -1) {
-                bookmark.tags.splice(index, 1);
-            }
+        if (!tag) {
+            return res.status(400).send({ error: 'Tag not available!' })
         }
+        const index = bookmark.tags.indexOf(tag.id)
+        if (index > -1) {
+            bookmark.tags.splice(index, 1);
+        }
+        else{
+            return res.status(400).send({ error: 'Tag not present!' })
+        }
+        
         await bookmark.save()
         res.send({bookmark,tag})
     }catch(e)
