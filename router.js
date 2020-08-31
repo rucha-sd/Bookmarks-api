@@ -56,7 +56,7 @@ router.delete('/bookmarks/:id', async(req, res) => {
 
 router.patch('/bookmarks/:id', async (req, res) => {
     const updates = Object.keys(req.body)
-    const allowedUpdates = ['title', 'publisher', 'link','tags']
+    const allowedUpdates = ['title', 'publisher', 'link']
     const isValidOperation = updates.every((update) => allowedUpdates.includes(update))
 
     if (!isValidOperation) {
@@ -195,7 +195,7 @@ router.patch('/removetag/:id', async (req, res)=> {
             bookmark.tags.splice(index, 1);
         }
         else{
-            return res.status(400).send({ error: 'Tag not present!' })
+            return res.status(400).send({ error: 'Tag not added to bookmark!' })
         }
         
         await bookmark.save()
